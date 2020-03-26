@@ -36,4 +36,17 @@ final class BuilderTests: XCTestCase {
 
         XCTAssertEqual(date, Date(timeIntervalSince1970: 1585180800))
     }
+
+    func testAnyBuilder() {
+
+        let builder = Builder(configuration: DateComponents(), configure: \.date)
+            .day(26)
+            .month(3)
+            .year(2020)
+            .calendar(Calendar(identifier: .gregorian))
+            .timeZone(TimeZone(secondsFromGMT: 0))
+            .eraseToAnyBuilder()
+
+        XCTAssertEqual(builder.build(), Date(timeIntervalSince1970: 1585180800))
+    }
 }

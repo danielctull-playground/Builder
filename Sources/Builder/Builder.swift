@@ -32,3 +32,18 @@ extension Builder where Configuration == Value {
         self.init(configuration: value, configure: { $0 })
     }
 }
+
+extension Builder {
+
+    public func eraseToAnyBuilder() -> AnyBuilder<Value> {
+        AnyBuilder(build: build)
+    }
+}
+
+public struct AnyBuilder<Value> {
+
+    public let build: () -> Value
+    init(build: @escaping () -> Value) {
+        self.build = build
+    }
+}
