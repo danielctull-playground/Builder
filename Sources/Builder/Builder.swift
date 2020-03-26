@@ -1,6 +1,11 @@
 
+public protocol Builder {
+    associatedtype Value
+    func build() -> Value
+}
+
 @dynamicMemberLookup
-public struct Builder<Configuration, Value> {
+public struct ConfigurableBuilder<Configuration, Value>: Builder {
 
     public init(configuration: Configuration,
                 configure: @escaping (Configuration) -> Value) {
@@ -16,17 +21,17 @@ public struct Builder<Configuration, Value> {
     /// Returns a function that can be used to set a value for a property on Root.
     public subscript<Property>(
         dynamicMember keyPath: WritableKeyPath<Configuration, Property>
-    ) -> (Property) -> Builder<Configuration, Value> {
+    ) -> (Property) -> ConfigurableBuilder<Configuration, Value> {
         {
             var configuration = self.configuration
             configuration[keyPath: keyPath] = $0
-            return Builder(configuration: configuration,
-                           configure: self.configure)
+            return ConfigurableBuilder(configuration: configuration,
+                                       configure: self.configure)
         }
     }
 }
 
-extension Builder where Configuration == Value {
+extension ConfigurableBuilder where Configuration == Value {
 
     public init(_ value: Value) {
         self.init(configuration: value, configure: { $0 })
@@ -40,10 +45,12 @@ extension Builder {
     }
 }
 
-public struct AnyBuilder<Value> {
+public struct AnyBuilder<Value>: Builder {
 
-    public let build: () -> Value
+    public func build() -> Value { _build() }
+
+    private let _build: () -> Value
     init(build: @escaping () -> Value) {
-        self.build = build
+        _build = build
     }
 }
