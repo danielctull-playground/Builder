@@ -15,11 +15,11 @@ final class BuilderTests: XCTestCase {
         XCTAssertEqual(builder0.value.name, "")
         XCTAssertEqual(builder0.value.age, 0)
 
-        let builder1 = builder0.setValue("Daniel", for: \.name)
+        let builder1 = builder0.name("Daniel")
         XCTAssertEqual(builder1.value.name, "Daniel")
         XCTAssertEqual(builder1.value.age, 0)
 
-        let builder2 = builder1.setValue(35, for: \.age)
+        let builder2 = builder1.age(35)
         XCTAssertEqual(builder2.value.name, "Daniel")
         XCTAssertEqual(builder2.value.age, 35)
     }
