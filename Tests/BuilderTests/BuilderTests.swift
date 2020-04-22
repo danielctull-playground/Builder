@@ -65,4 +65,16 @@ final class BuilderTests: XCTestCase {
 
         XCTAssertEqual(build(builder), Date(timeIntervalSince1970: 1585180800))
     }
+
+    func testURL() throws {
+
+        let builder = ConfigurableBuilder(configuration: URLComponents(), configure: \.url)
+            .scheme("https")
+            .host("danieltull.co.uk")
+            .path("/notes")
+            .queryItems([URLQueryItem(name: "query", value: "value")])
+            .fragment("fragment")
+
+        XCTAssertEqual(builder.build(), URL(string: "https://danieltull.co.uk/notes?query=value#fragment"))
+    }
 }
