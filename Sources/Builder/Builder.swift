@@ -29,6 +29,17 @@ public struct ConfigurableBuilder<Configuration, Value>: Builder {
                                        configure: self.configure)
         }
     }
+
+    // Returns a function that can be used to set a value for a property
+    // when Root is a reference type, so it won't do any copying.
+    public subscript<Property>(
+        dynamicMember keyPath: ReferenceWritableKeyPath<Configuration, Property>
+    ) -> (Property) -> ConfigurableBuilder<Configuration, Value> {
+        {
+            self.configuration[keyPath: keyPath] = $0
+            return self
+        }
+    }
 }
 
 extension ConfigurableBuilder where Configuration == Value {
